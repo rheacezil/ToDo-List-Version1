@@ -7,6 +7,7 @@ const date = require(__dirname + "/date.js");
 const app = express();
 
 const items = [];
+const workItems = [];
 
 app.set("view engine", "ejs");
 
@@ -25,13 +26,17 @@ app.get("/", function (req, res) {
 app.post("/", function (req, res) {
   let item = req.body.newItem;
 
-  items.push(item);
-
-  res.redirect("/");
+  if (req.body.list === "Work") {
+    workItems.push(item);
+    res.redirect("/Work");
+  } else {
+    items.push(item);
+    res.redirect("/");
+  }
 });
 
 app.get("/work", function (req, res) {
-  res.render("list", { listTitle: "Work List" });
+  res.render("list", { listTitle: "Work List", newListItems: workItems });
 });
 
 app.listen(3000, function () {
